@@ -16,7 +16,7 @@ public class movieNamesArrayList {
 
         Scanner input = new Scanner(System.in);
 //ingresar nombres y duracion
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("Ingrese el nombre de la pelicula numero " + (i + 1) + ": ");
             peliNombre.add(input.nextLine());
             System.out.println("Ingrese la duracion de la pelicula en formato de minutos: " + peliNombre.get(i));
@@ -57,3 +57,4 @@ int posicionConsultarNombre = peliNombre.indexOf(consultarNombre);
 
     }
 }
+
