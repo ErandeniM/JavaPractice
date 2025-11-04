@@ -155,7 +155,7 @@ int indiceUsuario = -1;
                                     System.out.println("Cantidad invalida.");
                                 }
 
-                            historialMov.addLast("Ha retirado: " + monto);
+                            historialMov.addFirst("Ha retirado: " + monto);
                             break;
                             case 4:
                             System.out.println("Ingrese el nuevo PIN:");
@@ -194,3 +194,4 @@ break;
         scanner.close();
     }
 }
+
