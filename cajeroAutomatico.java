@@ -4,6 +4,12 @@ Al inicio, el usuario elige qué cuenta quiere usar.
 Cambio de PIN:
 Agregar una opción al menú para cambiar el PIN.
 Validar que el nuevo PIN no sea igual al anterior y confirmarlo dos veces.
+Historial de operaciones:
+Guardar en un arreglo las últimas operaciones realizadas (depósitos o retiros).
+Al elegir la opción “Ver historial”, mostrar el tipo de operación y el monto.
+Comisión de retiro:
+Aplicar un 1% o 2% de comisión a cada retiro y mostrar cuánto se descontó.
+
 */
 
 package cajeroAutomatico;
@@ -12,6 +18,9 @@ import java.util.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
 
 public class cajeroAutomatico {
     public static void main(String[] args) {
@@ -24,6 +33,8 @@ public class cajeroAutomatico {
         int nuevoPin;
         double monto;
         int numeroDeUsuario;
+
+        LinkedList<String> historialMov = new LinkedList<>();
 
         //creamos una lista de maps como una lista de diccionarios
         List<Map<String, Object>> usuarios = new ArrayList<>();
@@ -101,7 +112,8 @@ int indiceUsuario = -1;
                     System.out.println("2. Depositar dinero");
                     System.out.println("3. Retirar dinero");
                     System.out.println("4. Modificar PIN");
-                    System.out.println("5. Salir");
+                    System.out.println("5. Consultar historial de movimientos");
+                    System.out.println("6. Salir");
                     System.out.println("----------------------");
                     System.out.println("Elija una opcion: ");
 
@@ -120,23 +132,32 @@ int indiceUsuario = -1;
                             } else {
                                 System.out.println("Monto no valido.");
                             }
+                            historialMov.addFirst("Ha depositado: " + monto);
                             break;
                         case 3:
                             System.out.println("Cantidad de dinero que desea retirar: ");
                             monto = scanner.nextDouble();
                             double saldoActual = (double) usuario.get("SALDO");
+                            double comision = monto *.01;
 
-                            if (monto > 0 && monto <= saldoActual) {
-                                double nuevoSaldo = saldoActual - monto;
-                                usuario.put("SALDO", nuevoSaldo);
-                                System.out.printf("Retiro exitoso. Nuevo saldo: $%.2f%n", nuevoSaldo);
-                            } else if (monto > 0) {
-                                System.out.println("Fondos insuficientes.");
-                            } else {
-                                System.out.println("Cantidad invalida.");
-                            }
+                            double montoComision = monto + comision;
+
+                            if ( monto > 0 && montoComision <= saldoActual) {
+                                //if (monto > 0 && monto <= saldoActual) {
+
+                                    double nuevoSaldo = saldoActual - montoComision;
+                                    usuario.put("SALDO", nuevoSaldo);
+                                    System.out.printf("Retiro exitoso. Nuevo saldo: $%.2f%n", nuevoSaldo);
+                                System.out.printf("Se te ha cobrado una comision de: $%.2f%n",  comision );
+                                } else if (monto > 0) {
+                                    System.out.println("Fondos insuficientes.");
+                                } else {
+                                    System.out.println("Cantidad invalida.");
+                                }
+
+                            historialMov.addLast("Ha retirado: " + monto);
                             break;
-                        case 4:
+                            case 4:
                             System.out.println("Ingrese el nuevo PIN:");
                             nuevoPin = scanner.nextInt();
                             if (nuevoPin == (int) usuario.get("PIN")) {
@@ -152,25 +173,24 @@ int indiceUsuario = -1;
                                 }
                             }
                             break;
-
                         case 5:
+                            System.out.println("::::::::::HISTORIAL DE MOVIMIENTOS::::::::::");
+                            historialMov.forEach(System.out::println);
+break;
+                            case 6:
                             System.out.println("Saliendo del sistema...");
                             break;
                         default:
                             System.out.println("Opcion invalida.");
                             break;
                     }
-                } while (opcionMenu != 5);
+                } while (opcionMenu != 6);
 
             } else{
             System.out.println("Ha excedido el numero de intentos. Tarjeta bloqueada.");
         }
-
         }
         System.out.println("Gracias por usar el cajero.");
         scanner.close();
-
     }
-
-
 }
