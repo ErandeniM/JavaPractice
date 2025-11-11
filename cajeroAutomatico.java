@@ -14,7 +14,10 @@ Límite de operaciones:
 Si el usuario realiza más de 5 operaciones, mostrar “Límite de transacciones alcanzado” y salir.
 Registro de hora o fecha de operación:
 Cada operación debe registrar una fecha u hora (aunque sea ingresada manualmente).
-
+Opción de consultar movimientos totales:
+Mostrar cuántos depósitos, retiros y consultas se realizaron en total.
+Personalizar interfaz:
+Mejorar los mensajes y presentación del menú (líneas divisoras, espacios, títulos, etc.).
  */
 
 
@@ -41,6 +44,10 @@ public class cajeroautomatico {
         double monto;
         int numeroDeUsuario;
         int operaciones = 0;
+        int cantDepositos=0;
+        int cantRetiros = 0 ;
+        int cantConsultas = 0;
+
 
         //OBJETOS DE FECHAS
         LocalDateTime fechaMov = LocalDateTime.now();
@@ -134,27 +141,45 @@ public class cajeroautomatico {
 
                         switch (opcionMenu) {
                             case 1:
+                                System.out.println("╔══════════════════════════════════════╗");
                                 System.out.printf("Su saldo actual es: $%.2f%n", (Double) usuario.get("SALDO"));
+                                System.out.println("╠══════════════════════════════════════╣");
                                 System.out.println(fechaMovFormat);
+                                System.out.println("╚══════════════════════════════════════╝");
                                 operaciones++;
+                                cantConsultas++;
                                 break;
                             case 2:
+                                System.out.println("╔══════════════════════════════════════╗");
                                 System.out.println("Cantidad de dinero que desea depositar: ");
+                                System.out.println("╚══════════════════════════════════════╝");
+
                                 monto = scanner.nextDouble();
+                                System.out.println("╔══════════════════════════════════════╗");
+
                                 if (monto > 0) {
                                     double nuevoSaldo = (double) usuario.get("SALDO") + monto;
                                     usuario.put("SALDO", nuevoSaldo);
                                     System.out.printf("Deposito realizado. Nuevo saldo: $%.2f%n", (Double) usuario.get("SALDO"));
+                                    System.out.println("╠══════════════════════════════════════╣");
+
                                 } else {
                                     System.out.println("Monto no valido.");
                                 }
                                 historialMov.addFirst("Ha depositado: " + monto);
-                                System.out.println(fechaMovFormat);
+                                System.out.println( "║        " +fechaMovFormat +"           ║");
+                                System.out.println("╚══════════════════════════════════════╝");
+
                                 operaciones++;
+                                cantDepositos++;
                                 break;
                             case 3:
+                                System.out.println("╔══════════════════════════════════════╗");
                                 System.out.println("Cantidad de dinero que desea retirar: ");
+                                System.out.println("╚══════════════════════════════════════╝");
+
                                 monto = scanner.nextDouble();
+                                scanner.nextLine();
                                 double saldoActual = (double) usuario.get("SALDO");
                                 double comision = monto * .01;
 
@@ -165,6 +190,8 @@ public class cajeroautomatico {
 
                                     double nuevoSaldo = saldoActual - montoComision;
                                     usuario.put("SALDO", nuevoSaldo);
+                                    System.out.println("╔══════════════════════════════════════╗");
+
                                     System.out.printf("Retiro exitoso. Nuevo saldo: $%.2f%n", nuevoSaldo);
                                     System.out.printf("Se te ha cobrado una comision de: $%.2f%n", comision);
                                 } else if (monto > 0) {
@@ -174,10 +201,15 @@ public class cajeroautomatico {
                                 }
 
                                 historialMov.addLast("Ha retirado: " + monto);
+                                System.out.println("╠══════════════════════════════════════╣");
+
                                 System.out.println(fechaMovFormat);
+                                System.out.println("╚══════════════════════════════════════╝");
                                 operaciones++;
+                                cantRetiros++;
                                 break;
                             case 4:
+                                System.out.println("╔══════════════════════════════════════╗");
                                 System.out.println("Ingrese el nuevo PIN:");
                                 nuevoPin = scanner.nextInt();
                                 if (nuevoPin == (int) usuario.get("PIN")) {
@@ -192,10 +224,21 @@ public class cajeroautomatico {
                                         System.out.println("Los PIN no coinciden.");
                                     }
                                 }
+                                System.out.println("╚══════════════════════════════════════╝");
                                 break;
                             case 5:
-                                System.out.println("::::::::::HISTORIAL DE MOVIMIENTOS::::::::::");
+                                System.out.println("╔══════════════════════════════════════╗");
+                                System.out.println("║      HISTORIAL DE MOVIMIENTOS        ║");
+                                System.out.println("╠══════════════════════════════════════╣");
                                 historialMov.forEach(System.out::println);
+                                System.out.println("Consultas: "+ cantConsultas);
+                                System.out.println("Depositos: "+ cantDepositos);
+                                System.out.println("Retiros: "+ cantRetiros);
+                                cantConsultas++;
+                                System.out.println("╠══════════════════════════════════════╣");
+                                System.out.println("║    Gracias por usar nuestro cajero   ║");
+                                System.out.println("╚══════════════════════════════════════╝");
+
                                 break;
                             case 6:
                                 System.out.println("Saliendo del sistema...");
